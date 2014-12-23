@@ -51,7 +51,7 @@ class Searcher(SearcherBase):
     def search(self, protocols, media, quality):
         results = []
 
-        for search_protocol in protocols:
+        for search_protocol in ["nzb","torrent","torrent_magnet"]:
             protocol_results = fireEvent('provider.search.%s.%s' % (search_protocol, media.get('type')), media, quality, merge = True)
             if protocol_results:
                 results += protocol_results
