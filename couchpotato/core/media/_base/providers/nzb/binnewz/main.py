@@ -98,6 +98,8 @@ class Base(NZBProvider):
                         newsgroup = newgroupLink.contents[0]
                         if newsgroup == "abmulti":
                             newsgroup = "alt.binaries.multimedia"
+                        elif newsgroup == "ab.moovee":
+                            newsgroup = "alt.binaries.moovee"
                         elif newsgroup == "abtvseries":
                             newsgroup = "alt.binaries.tvseries"
                         elif newsgroup == "abtv":
@@ -295,7 +297,7 @@ class Base(NZBProvider):
                                     new['name'] = name + detectedlang +  qualityStr + qualitytag + downloader.__class__.__name__ 
                                     new['url'] = binsearch_result.nzburl
                                     new['detail_url'] = binsearch_result.refererURL
-                                    new['size'] = int(str(binsearch_result.sizeInMegs)[:str(binsearch_result.sizeInMegs).find('.')].replace('L',''))
+                                    new['size'] = binsearch_result.sizeInMegs
                                     new['age'] = binsearch_result.age
                                     new['extra_check'] = extra_check
         
@@ -310,11 +312,12 @@ class Base(NZBProvider):
     
     def download(self, url = '', nzb_id = ''):
         if 'binsearch' in url:
-            params = {'action': 'nzb'}
-            params[nzb_id] = 'on'
-
+            data = {
+            'action': 'nzb',
+            nzb_id: 'on'
+            }
             try:
-                return self.urlopen(url, data = params, show_error = False)
+                return self.urlopen(url, data = data, show_error = False)
             except:
                 log.error('Failed getting nzb from %s: %s', (self.getName(), traceback.format_exc()))
                 return 'try_next'
@@ -341,6 +344,7 @@ config = [{
             'name': 'binnewz',
             'description': 'Free provider, lots of french nzbs. See <a href="http://www.binnews.in/">binnewz</a>',
             'wizard': True,
+            'icon': 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAgRJREFUOI1t009rVFcYx/HPuffOTGYmMcZoEmNUkiJRSZRAC1ropuimuy6KuHHhShe+EF+CL8AX4LpQCgoiohhMMKKMqHRTtaJJ5k8nudfFnBkjzoEf5zk8PN/zO3+egFGMYX+MS9hFG604d/A/ulG7yFFkqOGgcuUuSJK32q0NPMMaNrE9RC10UxzCedX6767cqDu2MGV8YlFz62ed9iWVkYvy/IyimEUSFaKD3QwV7ENwapmlHymVU5126tNHVh9MW3s8bfXhOW8b16TpliR5otW8jm6GHiSEYOYoF076Zjx6x29/8OHfssZzNp6Ou3XzF8zicxYtZWBislfUKL4CFgIvd5mcYuowed7PjKOSGTYWwiAsij6srChmJI058Q6qyIYD9jgIIQzWxXygPtZPpUj6gGJv/V4HGoViPsLWt77bK9P7FDtg8zPr21RrX48wT3g11OcA0MG2oii8aXB4jiInK5FmSAcOGBUawwFvtFuJO7dpbLBynuM/UK0Jn0YolXtqNfn4vl/bRZ7pfcsXdrqX3f/rhgd/L+m0J8zMdZ1eKTn7U7C4zNg+yhX+ed2/syZ2AkZQ12umSRyI8wpOqdaXdTszRmocOR5Mz2bu/ZnL81/xIsTnyFCOsKpeg9ViPBo1jxMq1UVpEjS3r+K/Pe81aJQ0qhShlQiuxPxOtL+J1heOZZ0e63LUQAAAAABJRU5ErkJggg==',
             'options': [
                 {
                     'name': 'enabled',

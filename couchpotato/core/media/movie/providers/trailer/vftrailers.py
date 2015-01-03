@@ -1,5 +1,6 @@
 # -*- coding: latin-1 -*-
 import subprocess
+import youtube_dl
 import time
 import sys
 import os.path
@@ -33,7 +34,10 @@ class vftrailers(VFTrailerProvider):
     
     def cleantitle(self,title):
         specialchars=['(',')',',','.',';','!','?','-',':','_','[',']','|','  ','  ','  ']
-        title=unicodedata.normalize('NFKD',title).encode('ascii','ignore')
+        try:
+            title=unicodedata.normalize('NFKD',title).encode('ascii','ignore')
+        except:
+            title=title
         for chars in specialchars:
             title=title.replace(chars,' ')        
         return title.lower()
@@ -128,7 +132,6 @@ class vftrailers(VFTrailerProvider):
            
     def googlesearch(self,searchstringori):
         uploadtoignore=['UniversalMoviesFR','ParamountmoviesFR']
-        time.sleep(30)
         searchstring=searchstringori[:-5].replace(' ','+')
         urldic={}
         regexurl ="url(?!.*url).*?&amp"
@@ -145,20 +148,19 @@ class vftrailers(VFTrailerProvider):
         self.logg('En train de rechercher sur google : ' +searchstring)
         self.logg('Query : ' +query,True)
         htmltext=br.open(query).read()
-        soup=BeautifulSoup(htmltext,"html.parser")
-        search=soup.findAll('div',attrs={'id':'search'})
-        searchtext = str(search[0])
-        
-        soup1=BeautifulSoup(searchtext,"html.parser")
-        list_items=soup1.findAll('li')
+        soup=BeautifulSoup(htmltext,'html5lib')
+        list_items=soup.findAll('div',attrs={'id':'search'})[0].findAll('li')
+        x=0
+        urldic={}
         for li in list_items:
             try:
                 doweignore=0
-                soup2 = BeautifulSoup(str(li),"html.parser")
+                soup2 = list_items[x]
                 for toignore in uploadtoignore:
                     if toignore in str(soup2):
                         doweignore+=1
                 if doweignore<>0:
+                    x+=1
                     continue
                 links= soup2.findAll('a')
                 if not 'webcache' in str(links): 
@@ -168,7 +170,9 @@ class vftrailers(VFTrailerProvider):
                     urldic.update({source_title:source_url})
                 
             except:
+                x+=1
                 continue
+            x+=1
         self.logg(str(len(urldic))+ ' resultats trouves sur google')
         return urldic
     
@@ -202,7 +206,7 @@ class vftrailers(VFTrailerProvider):
                     pagetrailer=x['href']
                 else:
                     continue
-            soup = BeautifulSoup( urllib2.urlopen(pagetrailer), "html.parser" )
+            soup = BeautifulSoup( urllib2.urlopen(pagetrailer))
             rows = soup.findAll("a")
             
             for lien in rows:
@@ -301,7 +305,7 @@ class vftrailers(VFTrailerProvider):
                     extallo=url['ext']
                     self.logg('Telechargement de la bande annonce suivante : ' + linkallo +' en '+str(heightbaallo)+'p en cours...')
                     try:
-                        urllib.urlretrieve(linkallo, trailerpath+'.'+extallo)
+                        urllib.urlretrieve(linkallo, trailerpath.encode('latin-1')+'.'+extallo.encode('latin-1'))
                         self.logg('Une bande annonce telechargee pour ' + moviename +' sur Allocine')
                         return True
                         break
@@ -315,29 +319,21 @@ class vftrailers(VFTrailerProvider):
                     try:
                         self.logg('En train de telecharger : ' + bo + ' pour ' +moviename)
                         tempdest=unicodedata.normalize('NFKD', os.path.join(rootDir,trailername.replace("'",''))).encode('ascii','ignore')+u'.%(ext)s'
-                        dest=trailerpath
-                        p=subprocess.Popen([sys.executable, 'youtube_dl/__main__.py', '-o',tempdest,'--newline', '--max-filesize', '105m', '--format','best',bo],cwd=rootDir, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-                        while p.poll() is None:
-                            l = p.stdout.readline()
-                            if 'download' in l:
-                                lmsg= l.replace('%',' percent')+' '+trailername
-                                self.logg(lmsg)
-                        (out, err) = p.communicate()
-                        self.logg(out)
-                        if err:
-                            self.logg(err)
-                            continue
-                        else:
-                            listetemp=glob.glob(os.path.join(rootDir,'*'))
-                            for listfile in listetemp:
-                                if unicodedata.normalize('NFKD', trailername.replace("'",'')).encode('ascii','ignore') in listfile:
-                                    ext=listfile[-4:]
-                                    destination=dest+ext
-                                    shutil.move(listfile, destination)
-                                    bocount=1
-                                    self.logg('Une bande annonce telechargee pour ' + moviename)
-                                    return True
-                    except:
+                        dest=trailerpath.encode('latin-1')
+                        ydl_opts={'outtmpl':tempdest,'max_filesize':'105m','format':'best'}
+                        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                            ydl.download([bo])
+                        listetemp=glob.glob(os.path.join(rootDir,'*'))
+                        for listfile in listetemp:
+                            if unicodedata.normalize('NFKD', trailername.replace("'",'')).encode('ascii','ignore') in listfile:
+                                ext=listfile[-4:]
+                                destination=dest+ext
+                                shutil.move(listfile, destination)
+                                bocount=1
+                                self.logg('Une bande annonce telechargee pour ' + moviename)
+                                return True
+                    except Exception, err:
+                        print err
                         continue
                 else:
                     continue

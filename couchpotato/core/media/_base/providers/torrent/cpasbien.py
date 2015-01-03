@@ -65,50 +65,37 @@ class Base(TorrentProvider):
                        
             try:
                 html = BeautifulSoup(data)
-
-                resultdiv = html.find('div', attrs = {'id':'recherche'}).find('table').find('tbody')
-
-                for result in resultdiv.find_all('tr', recursive = False):
+                lin=0
+                erlin=0
+                resultdiv=[]
+                while erlin==0:
+                    try:
+                        classlin='ligne'+str(lin)
+                        resultlin=html.findAll(attrs = {'class' : [classlin]})
+                        if resultlin:
+                            for ele in resultlin:
+                                resultdiv.append(ele)
+                            lin+=1
+                        else:
+                            erlin=1
+                    except:
+                        erlin=1
+                for result in resultdiv:
 
                     try:
                         
                         new = {}
-
-                        #id = result.find_all('td')[2].find_all('a')[0]['href'][1:].replace('torrents/nfo/?id=','')
-                        name = result.find_all('td')[0].find_all('a')[0].text
+                        name = result.findAll(attrs = {'class' : ["titre"]})[0].text
                         testname=namer_check.correctName(name,movie)
                         if testname==0:
                             continue
-                        detail_url = result.find_all('td')[0].find_all('a')[0]['href']
-
-                        #on scrapp la page detail
-
-                        urldetail = detail_url.encode('UTF8')
-                        urldetail=unicodedata.normalize('NFD',unicode(urldetail,"utf8","replace"))
-                        urldetail=urldetail.encode('ascii','ignore')
-                        urldetail = urllib2.quote(urldetail.encode('utf8'), ":/?=")
-
-                        req = urllib2.Request(urldetail, headers={'User-Agent' : "Mozilla/5.0"} )  # POST request doesn't not work
-                        data_detail = urllib2.urlopen(req)
-
-                        url_download = ""
-
-                        if data_detail:
-                            
-                            html_detail = BeautifulSoup(data_detail)                                
-                            url_tmp = html_detail.find_all('div', attrs = {'class':'download-torrent'})[0].find_all('a')[0]['href']    
-                            url_download = ('http://www.cpasbien.pe%s' % url_tmp)
-                        else:
-                            tmp = result.find_all('td')[0].find_all('a')[0]['href']
-                            tmp = tmp.split('/')[6].replace('.html','.torrent')
-                            url_download = ('http://www.cpasbien.pe/_torrents/%s' % tmp)
-
-
-
-                        size = result.find_all('td')[1].text
-                        seeder = result.find_all('td')[2].find_all('span')[0].text
-                        leecher = result.find_all('td')[3].text
-                        age = '0'
+                        detail_url = result.find("a")['href']
+                        tmp = detail_url.split('/')[-1].replace('.html','.torrent')
+                        url_download = ('http://www.cpasbien.pe/telechargement/%s' % tmp)
+                        size = result.findAll(attrs = {'class' : ["poid"]})[0].text
+                        seeder = result.findAll(attrs = {'class' : ["seed_ok"]})[0].text
+                        leecher = result.findAll(attrs = {'class' : ["down"]})[0].text
+                        age = '1'
 
                         verify = getTitle(movie['info']).split(' ')
                         
@@ -238,6 +225,7 @@ config = [{
             'list': 'torrent_providers',
             'name': 'cpasbien',
             'description': 'See <a href="http://www.cpasbien.com/">cPASbien</a>',
+            'icon': 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAgZJREFUOI2lkj9oE2EYxn93l/Quf440gXg4lBoEMd2MDuLSkk0R6hCnuqjUoR0c7FDo4Ca0CDo7uRRBqEMDXSLUUqRDiZM1NMEI1VKTlDZpUppccvc5nJp/KooPfMPH+z3P+zzv+8F/Quq8XIVEEOY0kASIzpoLlBKUV+CuCblfCjyF/P3V1Qi6jrCs7k4eD/X1dS5NTy9tQaJD2MFDkA23W8UwQFGQRJcB0DS0cBg/DPY4a0OVZcHeHihKf1ifD6pVfGD/VmBAUeDwEGQZLAskCVQV6nVYW+M4lSLQo9stoKpQLoNtO2QhYHsbkkmOczm+AP5eBy/BfwRDn8GHJLkpFp3utRpkMpDLwckJvlCIM9Uqg6YZeAAj58E1CVlXCaaigcCjsWhU8Xq9UCo5lisVx4FhODFkGbdpMtlqXa4IsVUHYkLcVlbg3ddGo3AzErl2emLCGaCmwcAAuL4ntCxoNpFsG8O2odlkXojF17CgAK2PsJna2Xk/ViyOh0dHXWhaewaW1T6mSb5a5V6rtbAMU4D5c18FyCzu7i5fyWZvDMfjOh4PNBpd5A/5vLheq93ZhMc/eF0Lr0NhaX8/eS6djo/EYqfQdUekUuHNxsZR4uDg1id40f9J+qE/CwTeitlZIWZmxKtQqOSFi39D7IQy5/c/fxIMpoGhfyUDMAwXzsL4n958A9jfxsJ8X4WQAAAAAElFTkSuQmCC',
             'wizard': True,
             'options': [
                 {

@@ -48,10 +48,34 @@ class XBMC(MovieMetaData):
         return self.createMetaNameMult(self.conf('meta_extra_fanart_name'), name, root, i)
 
     def createMetaName(self, basename, name, root):
-        return os.path.join(root, basename.replace('%s', name))
+        try:
+            name=name.decode('latin-1')
+        except:
+            name=name
+        try:
+            root=root.decode('latin-1')
+        except:
+            root=root
+        try:
+            dest=os.path.join(root, basename.replace('%s', name)).encode('latin-1')
+        except:
+            dest=os.path.join(root, basename.replace('%s', name))
+        return dest
 
     def createMetaNameMult(self, basename, name, root, i):
-        return os.path.join(root, basename.replace('%s', name).replace('<i>', str(i + 1)))
+        try:
+            name=name.decode('latin-1')
+        except:
+            name=name
+        try:
+            root=root.decode('latin-1')
+        except:
+            root=root
+        try:
+            dest=os.path.join(root, basename.replace('%s', name).replace('<i>', str(i + 1))).encode('latin-1')
+        except:
+            dest=os.path.join(root, basename.replace('%s', name).replace('<i>', str(i + 1)))
+        return dest
 
     def getNfo(self, movie_info=None, data=None, i=0):
         if not data: data = {}
