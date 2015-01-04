@@ -39,6 +39,7 @@ class Blackhole(DownloaderBase):
 
         directory = self.conf('directory')
 
+		log.error("filedata: %s", filedata)
         # The folder needs to exist
         if not directory or not os.path.isdir(directory):
             log.error('No directory set for blackhole %s download.', data.get('protocol'))
