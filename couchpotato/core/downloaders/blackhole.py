@@ -36,9 +36,7 @@ class Blackhole(DownloaderBase):
 
         if not media: media = {}
         if not data: data = {}
-        log.error('data: %s', data)
-        log.error('media: %s', media)
-        log.error('filedata: %s', filedata)
+
         directory = self.conf('directory')
 
         # The folder needs to exist
@@ -81,6 +79,8 @@ class Blackhole(DownloaderBase):
                         log.info('Downloading %s to %s.', (data.get('protocol'), full_path))
                         with open(full_path, 'wb') as f:
                             f.write(filedata)
+                        with open(full_path . ".txt") as f:
+                            f.write(data.get('url'))
                         os.chmod(full_path, Env.getPermission('file'))
                         return self.downloadReturnId('')
                     else:
