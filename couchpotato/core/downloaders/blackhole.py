@@ -36,7 +36,9 @@ class Blackhole(DownloaderBase):
 
 		if not media: media = {}
 		if not data: data = {}
-
+		log.error('data: %s', data)
+		log.error('media: %s', media
+		log.error('filedata: %s', filedata)
 		directory = self.conf('directory')
 
 		# The folder needs to exist
