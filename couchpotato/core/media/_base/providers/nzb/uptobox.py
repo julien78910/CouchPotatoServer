@@ -120,7 +120,7 @@ class Base(NZBProvider):
                                 insert = 1
                          
                             if insert == 1 :
-                            log.error("test5")
+                                log.error("test5")
                                 
                                 new = {}
                                 age = aux.find_all('span')[-1].get_text()
