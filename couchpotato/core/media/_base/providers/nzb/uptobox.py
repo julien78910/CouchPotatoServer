@@ -118,6 +118,7 @@ class Base(NZBProvider):
                             if insert == 1 :
                                 
                                 new = {}
+                                aux = html.find_all(class_='postcat')[(nb_result - i)%8]
                                 age = aux.find_all('span')[-1].get_text()
                                 idt = html.find_all(class_="titrearticles")[(nb_result - i)%8].find_all('a')[0]['href'].replace('http://www.zone-telechargement.com/','')
                                 name = re.sub('[\t\n]', '', html.find_all(class_="titrearticles")[(nb_result - i)%8].get_text())
