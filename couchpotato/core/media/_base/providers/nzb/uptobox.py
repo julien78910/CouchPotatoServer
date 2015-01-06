@@ -159,7 +159,7 @@ class Base(NZBProvider):
 								except:
 									size = "4000"
 									
-								premium = soup.find_all(text=re.compile("Premium|premium|PREMIUM"))
+								premium = soup.find(text=re.compile("Premium|premium|PREMIUM"))
 								
 								def extra_check(item):
 									return True
