@@ -159,8 +159,13 @@ class Base(NZBProvider):
 								except:
 									size = "4000"
 									
-								premium = soup.find(text=re.compile("Premium|premium|PREMIUM"))
-								
+								prem = False
+								try:
+									premium = soup.find(text=re.compile("Premium|premium|PREMIUM"))
+									prem = True
+								except:
+									pass
+									
 								def extra_check(item):
 									return True
 
@@ -175,7 +180,8 @@ class Base(NZBProvider):
 								new['extra_check'] = extra_check
 													
 								self.findLink('Uptobox', soup, False, results, new)
-								self.findLink('Uptobox', premium, True, results, new)
+								if prem:
+									self.findLink('Uptobox', premium, True, results, new)
 								self.findLink('1fichier', soup, False, results, new)
 								
 
