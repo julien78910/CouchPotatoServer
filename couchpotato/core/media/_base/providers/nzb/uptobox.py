@@ -180,7 +180,7 @@ class Base(NZBProvider):
 								
 
 						except Exception as e:
-							log.error("error: %s", e)
+							log.error("error 1: %s", e)
 
 						i-=1
 
@@ -210,7 +210,7 @@ class Base(NZBProvider):
 			new['url'] = lien
 			results.append(new)
 		except Exception as e:
-			log.error("error: %s", e)
+			log.error("error 2: %s", e)
 		
 		return
 				
