@@ -106,13 +106,9 @@ class Base(NZBProvider):
                             html = BeautifulSoup(opener.open(URL + "&search_start=" + str((nb_result - i)/8 + 1)))
                             
                         try:
-                            log.error("test1")
-                            aux = html.find_all(class_='postcat')[(nb_result - i)%8]
-                            log.error("test2")
+                            aux = html.find_all(class_='link_cat')[(nb_result - i)%8]
                             categorie = aux.find_all('a')[0].get_text()
-                            log.error("test3")
                             insert = 0
-                            log.error("test4")
                         
                             if categorie == 'Blu-Ray 1080p/720p':
                                 insert = 1
@@ -120,7 +116,6 @@ class Base(NZBProvider):
                                 insert = 1
                          
                             if insert == 1 :
-                                log.error("test5")
                                 
                                 new = {}
                                 age = aux.find_all('span')[-1].get_text()
