@@ -206,41 +206,8 @@ class Base(NZBProvider):
 						lien = l['href']
 				except:
 					return
-					
 			
-			opener = urllib2.build_opener()
-			opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-								
-			page3 = opener.open(lien)
-			so = BeautifulSoup(page3)
-			captcha = so.find(alt='Security code')
-			
-			if captcha == None:
-			
-				br = mechanize.Browser()
-				br.set_handle_robots(False)
-				br.set_handle_refresh(False)
-				br.addheaders =[('User-agent', 'Firefox')]
-				response = br.open(lien)
-				br.select_form("ccerure")
-				time.sleep(2)
-				response = br.submit()
-
-				urls = re.findall('http://uptobox.com/[a-zA-Z0-9]{12}|http://[a-zA-Z0-9]{10}.1fichier.com/', response.read())
-				url = ""
-				j = 0
-				while (j < len(urls)):
-					url += urls[j] + "\n"
-					j+=2
-					log.info('lien ' + host + ': %s', url)
-			
-			else:
-				log.error("Captcha required")
-				return
-						
-			
-			new['url'] = url
-			
+			new['url'] = lien
 			results.append(new)
 		except Exception as e:
 			log.error("error: %s", e)
