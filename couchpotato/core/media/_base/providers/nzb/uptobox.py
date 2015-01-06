@@ -106,9 +106,13 @@ class Base(NZBProvider):
                             html = BeautifulSoup(opener.open(URL + "&search_start=" + str((nb_result - i)/8 + 1)))
                             
                         try:
+                            log.error("test1")
                             aux = html.find_all(class_='postcat')[(nb_result - i)%8]
+                            log.error("test2")
                             categorie = aux.find_all('a')[0].get_text()
+                            log.error("test3")
                             insert = 0
+                            log.error("test4")
                         
                             if categorie == 'Blu-Ray 1080p/720p':
                                 insert = 1
@@ -116,6 +120,7 @@ class Base(NZBProvider):
                                 insert = 1
                          
                             if insert == 1 :
+                            log.error("test5")
                                 
                                 new = {}
                                 age = aux.find_all('span')[-1].get_text()
@@ -123,7 +128,6 @@ class Base(NZBProvider):
                                 name = re.sub('[\t\n]', '', html.find_all(class_="titrearticles")[(nb_result - i)%8].get_text())
                                 name = name + " " + re.search("[0-9]{4}", age).group(0) + " " + html.find_all(class_="corps")[(nb_result - i)%8].find_all('span')[1].get_text()
                                 
-                                log.error("test1")
 
                                 testname=namer_check.correctName(name,movie)
                                 
@@ -138,8 +142,7 @@ class Base(NZBProvider):
                                     return
                                 else:
                                     previous_link.append(detail_url)
-                                
-                                log.error("test2")
+                                    
                                 page2 = opener.open(detail_url)
                                 soup = BeautifulSoup(page2).find(class_="contentl")
                                 
@@ -168,7 +171,6 @@ class Base(NZBProvider):
                                 def extra_check(item):
                                     return True
 
-                                log.error("test3")
                                 
                                 new['id'] = idt
                                 new['name'] = name + ' french'
@@ -179,13 +181,8 @@ class Base(NZBProvider):
                                 new['leechers'] = 10
                                 new['extra_check'] = extra_check
                                                     
-                                log.error("test4")
                                 self.findLink('Uptobox', soup, False, results, new)
-                                
-                                log.error("test5")
                                 self.findLink('Uptobox', premium, True, results, new)
-                                
-                                log.error("test6")
                                 self.findLink('1fichier', soup, False, results, new)
                                 
 
