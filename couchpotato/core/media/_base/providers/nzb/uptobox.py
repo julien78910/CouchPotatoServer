@@ -57,8 +57,8 @@ class Base(NZBProvider):
             except:
                 continue
             try:
-                results.append(urllib.urlencode( {'q': TitleStringReal, 'catlist[]' : qualpar, 'genrelist[]' : subcat} ) + "&orderby=popular")
-                results.append(urllib.urlencode( {'q': simplifyString(unicode(TitleStringReal,"latin-1")), 'catlist[]' : qualpar, 'genrelist[]' : subcat} ) + "&orderby=popular")
+                results.append(urllib.urlencode( {'q': TitleStringReal, 'catlist[]' : '94', 'catlist[]' : qualpar, 'genrelist[]' : subcat} ) + "&orderby=popular")
+                results.append(urllib.urlencode( {'q': simplifyString(unicode(TitleStringReal,"latin-1")), 'catlist[]' : '94', 'catlist[]' : qualpar, 'genrelist[]' : subcat} ) + "&orderby=popular")
             except:
                 continue
         
