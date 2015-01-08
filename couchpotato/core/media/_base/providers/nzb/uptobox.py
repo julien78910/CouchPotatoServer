@@ -112,7 +112,7 @@ class Base(NZBProvider):
                         
                             if categorie == 'Blu-Ray 1080p/720p':
                                 insert = 1
-                            if categorie == 'Films':
+                            if categorie == 'Films' or categorie == 'Vieux Films':
                                 insert = 1
                          
                             if insert == 1 :
