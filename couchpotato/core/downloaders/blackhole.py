@@ -78,6 +78,8 @@ class Blackhole(DownloaderBase):
                     if not os.path.isfile(full_path):
                         log.info('Downloading %s to %s.', (data.get('protocol'), full_path))
                         with open(full_path, 'wb') as f:
+                            f.write(filedata)
+                        with open(full_path[:-4] + ".txt", 'wb') as f:
                             f.write(data.get('url'))
                         os.chmod(full_path, Env.getPermission('file'))
                         return self.downloadReturnId('')
