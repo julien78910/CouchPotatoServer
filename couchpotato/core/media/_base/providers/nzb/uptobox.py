@@ -126,10 +126,10 @@ class Base(NZBProvider):
                                 name = re.sub('[\t\n]', '', html.find_all(class_="titrearticles")[(nb_result - i)%8].get_text())
                                 name = name + " " + re.search("[0-9]{4}", age).group(0) + " " + html.find_all(class_="corps")[(nb_result - i)%8].find_all('span')[1].get_text()
                                 
-                                test_age1 = self.ageToDays2(movie['info']['released'][:4])
+                                test_age1 = tryInt(movie['info']['released'][:4])
                                 log.error("%s", test_age1)
-                                test_age2 = self.ageToDays(aux.find_all(class_="quote")[(nb_result - i) % 8].find(text=re.compile((20[0-9]{2}|19[0-9]{2}))))
-                                log.error("%s", test_age1)
+                                test_age2 = tryInt(aux.find_all(class_="quote")[(nb_result - i) % 8].find(text=re.compile((20[0-9]{2}|19[0-9]{2}))))
+                                log.error("%s", test_age2)
                                 if (test_age > test_age2 + 2 or test_age < test_age2 - 2):
                                     i -= 1
                                     continue
