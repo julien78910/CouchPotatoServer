@@ -127,7 +127,7 @@ class Base(NZBProvider):
                                 name = name + " " + re.search("[0-9]{4}", age).group(0) + " " + html.find_all(class_="corps")[(nb_result - i)%8].find_all('span')[1].get_text()
                                 
                                 
-                                print movie['info']
+                                log.error("%s", movie['info'])
 
                                 testname=namer_check.correctName(name,movie)
                                 
