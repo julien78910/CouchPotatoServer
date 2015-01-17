@@ -22,7 +22,7 @@ class Base(NZBProvider):
     urls = {
         'test': 'http://www.zone-telechargement.com/',
         'detail': 'http://www.zone-telechargement.com/%s',
-        'search': 'http://www.zone-telechargement.com/index.php?',
+        'search': 'http://www.zone-telechargement.com/index.php?catlist[]=94&',
     }
 
     http_time_between_calls = 1 #seconds
@@ -84,7 +84,9 @@ class Base(NZBProvider):
                     html = BeautifulSoup(data)
 
                     result = html.find(class_="sresult").get_text()[1:-10]
-                    if result == "" or result == None:
+                    if 'Plus de' in result:
+                        nb_result = i = 4
+                    elif result == "" or result == None:
                         nb_result = i = 0
                         
                     else:
@@ -112,7 +114,7 @@ class Base(NZBProvider):
                         
                             if categorie == 'Blu-Ray 1080p/720p':
                                 insert = 1
-                            if categorie == 'Films':
+                            if categorie == 'Films' or categorie == 'Vieux Films':
                                 insert = 1
                          
                             if insert == 1 :
@@ -124,6 +126,8 @@ class Base(NZBProvider):
                                 name = re.sub('[\t\n]', '', html.find_all(class_="titrearticles")[(nb_result - i)%8].get_text())
                                 name = name + " " + re.search("[0-9]{4}", age).group(0) + " " + html.find_all(class_="corps")[(nb_result - i)%8].find_all('span')[1].get_text()
                                 
+                                
+                                print movie['info']
 
                                 testname=namer_check.correctName(name,movie)
                                 
