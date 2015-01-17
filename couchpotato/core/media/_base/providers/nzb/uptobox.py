@@ -128,9 +128,9 @@ class Base(NZBProvider):
                                 
                                 test_age1 = tryInt(movie['info']['released'][:4])
                                 log.error("%s", movie['info']['released'][:4])
-                                test_age2 = tryInt(html.find_all(class_="quote")[(nb_result - i) % 8].find(text=re.compile('([20][0-9][0-9]|[19][0-9][0-9])')))
-                                log.error("%s", html.find_all(class_="quote")[(nb_result - i) % 8].find(text=re.compile('([20][0-9][0-9]|[19][0-9][0-9])')))
-                                if (test_age > test_age2 + 2 or test_age < test_age2 - 2):
+                                test_age2 = tryInt(html.find_all(class_="quote")[(nb_result - i) % 8].find(text=re.compile('(20[0-9][0-9]|19[0-9][0-9])')))
+                                log.error("%s", html.find_all(class_="quote")[(nb_result - i) % 8].find(text=re.compile('(20[0-9][0-9]|19[0-9][0-9])')))
+                                if test_age2 and (test_age1 > test_age2 + 2 or test_age1 < test_age2 - 2):
                                     i -= 1
                                     continue
 
