@@ -152,7 +152,10 @@ class Base(NZBProvider):
 								try:
 									size = ""
 									content = soup.get_text('\n').split('\n')
-									matching = [s for s in content if "Taille des fichiers" in s]
+									for i in range(0, len(content)):
+										if "Taille des fichiers" in content[i]:
+											matching = content[i] + content[i + 1]
+											break
 									log.error("matching: %s", matching)
 
 									size2 = soup.find_all(text=re.compile('([0-9]+[ ](MO|Mo|MB|Mb|GB|GO|Gb|Go))'))
