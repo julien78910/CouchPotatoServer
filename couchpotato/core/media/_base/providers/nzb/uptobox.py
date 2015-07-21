@@ -151,11 +151,13 @@ class Base(NZBProvider):
                                 
                                 try:
                                     size = ""
+									content = soup.get_text().split('\n')
+									matching = [s for s in content if "Taille des fichiers" in s]
+
                                     size2 = soup.find_all(text=re.compile('([0-9]+[ ](MO|Mo|MB|Mb|GB|GO|Gb|Go))'))
                                     
                                     for s in size2:
-                                        if re.search('[+]|(Mbps|Mb\\s)', s):
-                                            i-=1
+                                        if re.search('[+]|(Mbps|Mb\\s)', s) or s in matching:
                                             continue
                                         else:
                                             size = s
