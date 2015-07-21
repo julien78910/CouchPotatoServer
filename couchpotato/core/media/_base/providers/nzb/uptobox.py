@@ -124,7 +124,7 @@ class Base(NZBProvider):
                                 age = aux.find_all('span')[-1].get_text()
                                 idt = html.find_all(class_="titrearticles")[(nb_result - i)%8].find_all('a')[0]['href'].replace('http://www.zone-telechargement.com/','')
                                 name = re.sub('[\t\n]', '', html.find_all(class_="titrearticles")[(nb_result - i)%8].get_text())
-                                name = name + " " + re.search("[0-9]{4}", age).group(0) + " " + html.find_all(class_="corps")[(nb_result - i)%8].find_all('span')[1].get_text()
+                                name = name + " " + html.find_all(class_="link_cat")[(nb_result - i)%8].find_all('a')[1].get_text()
                                 
                                 test_age1 = tryInt(movie['info']['released'][:4])
                                 test_age2 = tryInt(html.find_all(class_="corps")[(nb_result - i) % 8].find(text=re.compile('(20[0-9][0-9]|19[0-9][0-9])'))[-4:])
