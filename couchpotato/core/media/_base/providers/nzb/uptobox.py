@@ -151,7 +151,7 @@ class Base(NZBProvider):
 								
 								try:
 									size = ""
-									content = soup.get_text().split('\n')
+									content = soup.get_text('\n').split('\n')
 									matching = [s for s in content if "Taille des fichiers" in s]
 									log.error("matching: %s", matching)
 
