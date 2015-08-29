@@ -156,7 +156,6 @@ class Base(NZBProvider):
 										if "Taille des fichiers" in content[i]:
 											matching = content[i] + content[i + 1]
 											break
-									log.error("matching: %s", matching)
 
 									size2 = soup.find_all(text=re.compile('([0-9]+[ ](MO|Mo|MB|Mb|GB|GO|Gb|Go))'))
 									
@@ -190,9 +189,9 @@ class Base(NZBProvider):
 								new['leechers'] = 10
 								new['extra_check'] = extra_check
 													
-								self.findLink('Uptobox', soup, False, results, new)
-								self.findLink('Uptobox', premium, True, results, new)
-								self.findLink('1fichier', soup, False, results, new)
+								#self.findLink('Uptobox', soup, False, results, new)
+								#self.findLink('Uptobox', premium, True, results, new)
+								self.findLink('1fichier', soup, True, results, new)
 								
 
 						except Exception as e:
