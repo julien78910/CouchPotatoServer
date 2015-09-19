@@ -194,7 +194,7 @@ class Base(NZBProvider):
 													
 								#self.findLink('Uptobox', soup, False, results, new)
 								#self.findLink('Uptobox', premium, True, results, new)
-								self.findLink('1fichier', soup, True, results, new)
+								self.findLink('1fichier', premium, True, results, new)
 								
 
 						except Exception as e:
